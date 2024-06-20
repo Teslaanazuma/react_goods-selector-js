@@ -1,7 +1,7 @@
 import 'bulma/css/bulma.css';
 import './App.scss';
 import { useState } from 'react';
-import classNames from 'classnames';
+import cn from 'classnames';
 
 export const goods = [
   'Dumplings',
@@ -17,44 +17,45 @@ export const goods = [
 ];
 
 export const App = () => {
-  const [selectedGood, setSelected] = useState('Jam');
+  const [selected, setSelected] = useState('Jam');
 
   return (
     <main className="section container">
       <h1 className="title is-flex is-align-items-center">
-        {selectedGood !== ''
-          ? `${selectedGood} is selected`
-          : 'No goods selected'}
-        {selectedGood && (
+        {selected ? `${selected} is selected` : 'No goods selected'}
+        {selected && (
           <button
-            onClick={() => setSelected('')}
             data-cy="ClearButton"
             type="button"
             className="delete ml-3"
+            onClick={() => setSelected(null)}
           />
         )}
       </h1>
-
       <table className="table">
         <tbody>
           {goods.map(good => (
             <tr
-              key={good}
-              onClick={() => setSelected(selectedGood !== good ? good : '')}
-              className={classNames({
-                'has-background-success-light': selectedGood === good,
-              })}
               data-cy="Good"
+              key={good}
+              className={cn({
+                'has-background-success-light': good === selected,
+              })}
             >
               <td>
                 <button
-                  data-cy={selectedGood === good ? 'RemoveButton' : 'AddButton'}
+                  data-cy={good === selected ? 'RemoveButton' : 'AddButton'}
                   type="button"
-                  className={
-                    selectedGood === good ? 'button is-info' : 'button'
+                  className={cn('button', {
+                    'is-info': good === selected,
+                  })}
+                  onClick={
+                    good === selected
+                      ? () => setSelected('')
+                      : () => setSelected(good)
                   }
                 >
-                  {selectedGood === good ? '-' : '+'}
+                  {good === selected ? '-' : '+'}
                 </button>
               </td>
 
